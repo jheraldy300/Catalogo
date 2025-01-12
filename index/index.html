@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Catálogo de Productos</h1>
+    </header>
+
+    <div class="container">
+        <div id="product-list">
+            <p>Cargando productos...</p>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:3000/products'; 
+
+        async function loadProducts() {
+            try {
+                const response = await fetch(apiUrl);
+                const products = await response.json();
+
+                const productList = document.getElementById('product-list');
+                productList.innerHTML = '';
+
+                products.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'product';
+                    productDiv.innerHTML = `
+                        <h2>${product.productname}</h2>
+                        <p><strong>Categoría:</strong> ${product.categoryname}</p>
+                        <p><strong>Descripción:</strong> ${product.description}</p>
+                        <p><strong>Stock:</strong> ${product.stock}</p>
+                    `;
+                    productList.appendChild(productDiv);
+                });
+            } catch (error) {
+                console.error('Error cargando productos:', error);
+                document.getElementById('product-list').innerHTML = '<p>Error al cargar los productos.</p>';
+            }
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>
